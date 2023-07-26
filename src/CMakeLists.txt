@@ -24,7 +24,7 @@ if (SPM_USE_EXTERNAL_ABSL)
    add_definitions("-D_USE_EXTERNAL_ABSL")
   endif()
 else()
-  set(ABSL_FLAGS_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/absl/flags/flag.cc)
+  set(ABSL_FLAGS_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../absl/flags/flag.cc)
 endif()
 
 if (SPM_USE_BUILTIN_PROTOBUF)
