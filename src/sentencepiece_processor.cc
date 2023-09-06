@@ -414,15 +414,20 @@ util::Status SentencePieceProcessor::Decode(
   return util::OkStatus();
 }
 
-util::Status SentencePieceProcessor::Decode(const std::vector<int> &ids,
+util::Status SentencePieceProcessor::Decode(const int *ids, size_t len,
                                             std::string *detokenized) const {
   CHECK_OR_RETURN_STATUS_STL(detokenized);
 
   SentencePieceText spt;
-  RETURN_IF_ERROR(Decode(ids, &spt));
+  RETURN_IF_ERROR(Decode(ids, len, &spt));
   *detokenized = std::move(spt.text());
 
   return util::OkStatus();
+}
+
+util::Status SentencePieceProcessor::Decode(const std::vector<int> &ids,
+                                            std::string *detokenized) const {
+  return Decode(ids.data(), ids.size(), detokenized);
 }
 
 util::Status SentencePieceProcessor::NBestEncode(
@@ -897,12 +902,13 @@ util::Status SentencePieceProcessor::Decode(
   return util::OkStatus();
 }
 
-util::Status SentencePieceProcessor::Decode(const std::vector<int> &ids,
+util::Status SentencePieceProcessor::Decode(const int *ids, size_t size,
                                             SentencePieceText *spt) const {
   std::vector<std::string> pieces;
   const int num_pieces = GetPieceSize();
-  pieces.reserve(ids.size());
-  for (const int id : ids) {
+  pieces.reserve(size);
+  for (size_t i = 0; i < size; ++i) {
+    int id = ids[i];
     if (id < 0 || id >= num_pieces) {
       return util::Status(util::StatusCode::kOutOfRange,
                           absl::StrCat("Invalid id: ", id));
@@ -910,6 +916,11 @@ util::Status SentencePieceProcessor::Decode(const std::vector<int> &ids,
     pieces.emplace_back(IdToPiece(id));
   }
   return Decode(pieces, spt);
+}
+
+util::Status SentencePieceProcessor::Decode(const std::vector<int> &ids,
+                                            SentencePieceText *spt) const {
+  return Decode(ids.data(), ids.size(), spt);
 }
 
 #define CHECK_STATUS_OR_RETURN_DEFAULT(value)                                \

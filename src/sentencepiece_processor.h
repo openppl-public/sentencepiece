@@ -310,6 +310,9 @@ class SentencePieceProcessor {
   virtual util::Status Decode(const std::vector<int> &ids,
                               std::string *detokenized) const;
 
+  virtual util::Status Decode(const int *ids, size_t len,
+                              std::string *detokenized) const;
+
   //////////////////////////////////////////////////////////////
   // NBest API.
   //
@@ -419,6 +422,10 @@ class SentencePieceProcessor {
 
   virtual util::Status Decode(const std::vector<int> &ids,
                               SentencePieceText *spt) const;
+
+  virtual util::Status Decode(const int *ids, size_t len,
+                              SentencePieceText *spt) const;
+
 #ifdef SWIG
 #define SPP_SWIG_CHECK_AND_THROW \
   if (!status.ok()) throw status;
