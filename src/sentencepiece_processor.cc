@@ -386,7 +386,7 @@ util::Status SentencePieceProcessor::Encode(
 
 util::Status SentencePieceProcessor::Encode(absl::string_view input,
                                             std::vector<int> *ids) const {
-  CHECK_OR_RETURN_STATUS_STL(ids);
+//   CHECK_OR_RETURN_STATUS_STL(ids);
 
   SentencePieceText spt;
   RETURN_IF_ERROR(Encode(input, &spt));
